@@ -25,7 +25,7 @@ Or install it yourself as:
 
 ## Usage
 
-For instance read the database user for AMOS:
+For instance read the database user :
 
 SecretStore[ :PASSWORD ]
 
