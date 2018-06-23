@@ -4,7 +4,7 @@ require 'yaml'
 # Configuration is read in following order, first match is returned
 # 1. Environment variable
 # 2. Property File
-class Reader
+class SecretStore::Reader
     class << self
 
         # If the given +name+ exists as environment variable it will returned 
@@ -15,12 +15,12 @@ class Reader
             env?(str) ? ENV[str] : properties[str]            
         end
 
-        priavte
+        private
 
         # If the given +key+ exists as environment variable it will returned
         def env(key)       
-            str = name.to_s     
-            env?(str) && ENV[str]
+            str = key.to_s  
+            env?(str) ? ENV[str] : nil
         end
 
         # Check if the given +key+ exists as environment variable.
@@ -38,25 +38,32 @@ class Reader
             @properties ||= load_files
         end
 
+        # for testing
+        def reset
+            @properties = nil
+        end
+
         # Loads the given +file+ as yaml file and puts the values into the given +hash+
         def load_file( file, hash = {})
+            fail 'given file is nil' unless file
             hash.merge!( YAML.load_file(file) )
         end
         
         def load_files( hash = {} )
+            
             files.inject(hash){|h,file|load_file(file,h)}
         end
 
         def files
             locations.inject([]) do |ary,loc| 
-                ary << File.file?( loc )
-                ary.concat( Dir[ File.join(loc,'**/*.yml') ] )
+                ary << loc if File.file?( loc )
+                ary.concat( Dir[ File.join(loc,'**/*.yml') ] ) if File.directory?(loc)
                 ary
             end
         end
 
-        def locations        
-            if path = env( :SECRET_FILE_PATH )
+        def locations  
+            if path = env( :SECRET_STORE_PATH )
                 path.split(':')
             else
                 [ '/run/secrets/secret' ]
@@ -64,4 +71,4 @@ class Reader
         end
 
     end # class << self
-end # Reader
+end # SecretStore::Reader
