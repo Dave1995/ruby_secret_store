@@ -3,7 +3,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require "secret_store/version"
 
 Gem::Specification.new do |spec|
-  spec.name          = 'secret_store'
+  spec.name          = 'ruby_secret_store'
   spec.version       = SecretStore::VERSION
   spec.authors       = [ 'Thomas Manig', 'David Erler', 'Andre Kullmann' ]
   spec.email         = [ 'thomas.manig(at)ottogroup.com' ]
