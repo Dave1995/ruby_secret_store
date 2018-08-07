@@ -66,7 +66,7 @@ class SecretStore::Reader
             if path = env( :SECRET_STORE_PATH )
                 path.split(':')
             else
-                [ '/run/secrets/secret' ]
+                [ '/var/run/secrets/' ]
             end        
         end
 
